@@ -1,14 +1,16 @@
 import NewFilterView from './view/filters.js';
-import NewSortingView from './view/sorting.js';
-import NewPointView from './view/route-point.js';
+import NewDestinationView from './view/destination.js';
 import { render } from './render.js';
+import BoardPresenter from './presenter/board-presenter.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const filtersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main');
 const tripEventsElement = mainElement.querySelector('.trip-events');
 const tripMainElement = siteHeaderElement.querySelector('.trip-main');
+const boardPresenter = new BoardPresenter({boardContainer: tripEventsElement});
 
 render(new NewFilterView(), filtersElement);
-render(new NewSortingView(), tripEventsElement);
-render(new NewPointView(), tripMainElement, 'afterbegin');
+render(new NewDestinationView(), tripMainElement, 'afterbegin');
+
+boardPresenter.init();
