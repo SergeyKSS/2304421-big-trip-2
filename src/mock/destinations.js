@@ -31,5 +31,71 @@ export const mockDestinations = [
         description: 'Amsterdam'
       }
     ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e04',
+    description: 'London is the capital city of the United Kingdom. It is famous for its historic landmarks and modern architecture.',
+    name: 'London',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'London'
+      }
+    ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
+    description: 'Rome is the capital city of Italy. It is known as the “Eternal City” because of its long and rich history.',
+    name: 'Rome',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Rome'
+      }
+    ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e06',
+    description: 'New York is one of the largest and most famous cities in the United States. It is often called “The Big Apple.',
+    name: 'New York',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'New York'
+      }
+    ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e07',
+    description: 'Paris is the capital city of France. It is known as the “City of Light.',
+    name: 'Paris',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Paris'
+      }
+    ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e08',
+    description: 'Tokyo is the capital city of Japan. It is one of the most modern and technologically advanced cities in the world.',
+    name: 'Tokyo',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Tokyo'
+      }
+    ]
+  },
+  {
+    id: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e09',
+    description: 'Shanghai is one of the largest cities in China. It is known for its modern skyline and fast development.',
+    name: 'Shanghai',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Shanghai'
+      }
+    ]
   }
 ];
