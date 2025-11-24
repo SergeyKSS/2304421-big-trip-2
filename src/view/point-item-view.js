@@ -48,7 +48,7 @@ function createPointItemTemplate(point, destination, offers) {
             </li>`;
 }
 
-export default class RoutePointItemView {
+export default class PointItemView {
   constructor({point, destination, offers}) {
     this.point = point;
     this.destination = destination;

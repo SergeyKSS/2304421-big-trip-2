@@ -1,6 +1,6 @@
 import SortingView from '../view/sorting-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
-import RoutePointItemView from '../view/point-item-view.js';
+import PointItemView from '../view/point-item-view.js';
 import NewPointView from '../view/new-point-view.js';
 import { render } from '../render.js';
 
@@ -24,7 +24,7 @@ export default class BoardPresenter {
     }), this.boardComponent.getElement());
 
     for (let i = 1; i < this.boardPoints.length; i++) {
-      render(new RoutePointItemView({
+      render(new PointItemView({
         point: this.boardPoints[i],
         destination: this.pointsModel.getDestinationById(this.boardPoints[i].destination),
         offers: this.pointsModel.getOffersByType(this.boardPoints[i].type)}), this.boardComponent.getElement());
