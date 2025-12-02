@@ -27,7 +27,7 @@ function createPhotosTemplate(pictures) {
   return pictures.map((pic) => `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`).join('');
 }
 
-function createNewPointTemplate(point, destination, offers) {
+function createEditPointTemplate(point, destination, offers) {
   const { basePrice, dateFrom, dateTo, type } = point;
   const { name, description, pictures } = destination;
 
@@ -104,23 +104,32 @@ function createNewPointTemplate(point, destination, offers) {
             </li>`;
 }
 
-export default class NewPointView extends AbstractView {
+export default class EditPointView extends AbstractView {
   #point = null;
   #destination = null;
   #offers = null;
+  #handleFormSubmit = null;
 
-  constructor({ point, destination, offers }) {
+  constructor({ point, destination, offers, onFormSubmit }) {
     super();
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
-    return createNewPointTemplate(
+    return createEditPointTemplate(
       this.#point,
       this.#destination,
       this.#offers
     );
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

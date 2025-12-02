@@ -1,7 +1,8 @@
 import SortingView from '../view/sorting-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import PointItemView from '../view/point-item-view.js';
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
+import EditPointView from '../view/edit-point-view.js';
 
 export default class BoardPresenter {
   #boardComponent = new TripEventsListView();
@@ -30,7 +31,41 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point, destination, offers) {
-    const pointComponent = new PointItemView({point, destination, offers});
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const pointComponent = new PointItemView({
+      point,
+      destination,
+      offers,
+      onRollUpBtnClick: () => {
+        replaceCardToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const editPointComponent = new EditPointView({
+      point,
+      destination,
+      offers,
+      onFormSubmit: () => {
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceCardToForm() {
+      replace(editPointComponent, pointComponent);
+    }
+
+    function replaceFormToCard() {
+      replace(pointComponent, editPointComponent);
+    }
 
     render(pointComponent, this.#boardComponent.element);
   }
