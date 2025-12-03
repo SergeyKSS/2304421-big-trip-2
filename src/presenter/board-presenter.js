@@ -43,7 +43,7 @@ export default class BoardPresenter {
       point,
       destination,
       offers,
-      onRollUpBtnClick: () => {
+      onRollDownBtnClick: () => {
         replaceCardToForm();
         document.addEventListener('keydown', escKeyDownHandler);
       }
@@ -54,6 +54,10 @@ export default class BoardPresenter {
       destination,
       offers,
       onFormSubmit: () => {
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onRollUpBtnClick: () => {
         replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
