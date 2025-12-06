@@ -3,6 +3,7 @@ import TripInfoView from './view/trip-info-view.js';
 import { render } from './framework/render.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/points-model.js';
+import ListEmptyView from './view/list-empty.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const filtersElement = siteHeaderElement.querySelector('.trip-controls__filters');
@@ -14,6 +15,11 @@ const pointsModel = new PointsModel();
 const boardPresenter = new BoardPresenter({boardContainer: tripEventsElement, pointsModel});
 
 render(new FilterView(), filtersElement);
-render(new TripInfoView(), tripMainElement, 'afterbegin');
 
-boardPresenter.init();
+if(pointsModel.getPoints().length === 0) {
+  render(new ListEmptyView(), tripEventsElement);
+} else {
+  render(new TripInfoView(), tripMainElement, 'afterbegin');
+  boardPresenter.init();
+}
+

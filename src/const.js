@@ -5,6 +5,15 @@ export const pointTypes = [
 export const filterTypes = [
   'everything', 'future', 'present', 'past'
 ];
+
+export const sortTypes = [
+  'day', 'event', 'time', 'price', 'offers'
+];
+
+export const disabledSorts = [
+  'event', 'offers'
+];
+
 export const DATE_FORMAT = {
   monthDay: 'MMM D',
   hour: 'HH:mm',

@@ -2,9 +2,12 @@ import AbstractView from '../framework/view/abstract-view';
 import { filterTypes } from '../const';
 
 function createTripFiltersTemplate(currentFilterType) {
+  function isFilterChecked(filterType) {
+    return filterType === currentFilterType ? 'checked' : '';
+  }
   return filterTypes.map((filterType) => `
     <div class="trip-filters__filter">
-      <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}" ${filterType === currentFilterType ? 'checked' : ''}>
+      <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}" ${isFilterChecked(filterType)}>
       <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType[0].toUpperCase() + filterType.slice(1)}</label>
     </div>`).join('');
 }

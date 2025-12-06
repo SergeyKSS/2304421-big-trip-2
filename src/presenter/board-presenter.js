@@ -9,6 +9,7 @@ export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
   #AllPoints = [];
+  #currentSort = 'day';
 
   constructor({boardContainer, pointsModel}) {
     this.#boardContainer = boardContainer;
@@ -18,7 +19,7 @@ export default class BoardPresenter {
   init() {
     this.#AllPoints = [...this.#pointsModel.getPoints()];
 
-    render(new SortingView(), this.#boardContainer);
+    render(new SortingView(this.#currentSort), this.#boardContainer);
     render(this.#tripEventListComponent, this.#boardContainer);
 
     this.#AllPoints.forEach((point) => {
