@@ -15,6 +15,7 @@ export default class BoardPresenter {
   #pointsModel = null;
   #allPoints = [];
   #currentSort = sortTypes[0].type;
+  #pointPresenters = new Map();
 
   constructor({boardContainer, pointsModel}) {
     this.#boardContainer = boardContainer;
@@ -39,8 +40,11 @@ export default class BoardPresenter {
 
     this.#allPoints.forEach((point) => {
       const pointPresenter = new PointPresenter ({
-        pointListContainer: this.#tripEventListComponent.element
+        pointListContainer: this.#tripEventListComponent.element,
+        onDataChange: this.#handlePointChange
       });
+
+      this.#pointPresenters.set(point.id, pointPresenter);
 
       pointPresenter.init({
         point,
@@ -49,5 +53,16 @@ export default class BoardPresenter {
       });
     });
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#allPoints = this.#allPoints.map((point) =>
+      point.id === updatedPoint.id ? updatedPoint : point);
+
+    this.#pointPresenters.get(updatedPoint.id).init({
+      point: updatedPoint,
+      destination: this.#pointsModel.getDestinationById(updatedPoint.destination),
+      offers: this.#pointsModel.getOffersByType(updatedPoint.type)
+    });
+  };
 }
 
