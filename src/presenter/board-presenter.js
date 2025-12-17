@@ -34,6 +34,10 @@ export default class BoardPresenter {
     this.#renderAllPoints();
   }
 
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #renderAllPoints() {
     render(new SortingView(this.#currentSort), this.#boardContainer);
     render(this.#tripEventListComponent, this.#boardContainer);
@@ -41,7 +45,8 @@ export default class BoardPresenter {
     this.#allPoints.forEach((point) => {
       const pointPresenter = new PointPresenter ({
         pointListContainer: this.#tripEventListComponent.element,
-        onDataChange: this.#handlePointChange
+        onDataChange: this.#handlePointChange,
+        onModeChange: this.#handleModeChange
       });
 
       this.#pointPresenters.set(point.id, pointPresenter);
