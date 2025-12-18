@@ -6,7 +6,7 @@ import TripInfoView from '../view/trip-info-view.js';
 import PointPresenter from './point-presenter.js';
 import { updateItem } from '../utils.js';
 import { SortType } from '../const.js';
-import { sortByDay, sortByPrice, sortByTime } from '../utils.js';
+import { sortByPrice, sortByTime } from '../utils.js';
 
 
 const tripMainElement = document.querySelector('.trip-main');
