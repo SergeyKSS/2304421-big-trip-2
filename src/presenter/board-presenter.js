@@ -59,7 +59,6 @@ export default class BoardPresenter {
   #clearBoard() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
-    this.#tripEventListComponent.element.innerHTML = '';
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -75,11 +74,11 @@ export default class BoardPresenter {
         break;
 
       case SortType.TIME:
-        this.#allPoints = [...this.#allPoints.sort(sortByTime)];
+        this.#allPoints = [...this.#sourcedBoardPoints].sort(sortByTime);
         break;
 
       case SortType.PRICE:
-        this.#allPoints = [...this.#allPoints.sort(sortByPrice)];
+        this.#allPoints = [...this.#sourcedBoardPoints].sort(sortByPrice);
         break;
     }
 
