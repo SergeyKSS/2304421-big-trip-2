@@ -22,7 +22,7 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init({ point, destination, offers }) {
+  init({ point, destination, offers, allDestinations, allOffersByType }) {
     this.#point = point;
 
     const prevPointComponent = this.#pointComponent;
@@ -32,6 +32,8 @@ export default class PointPresenter {
       point,
       destination,
       offers,
+      allDestinations,
+      allOffersByType,
       onRollDownBtnClick: this.#replacePointItemToForm,
       onFavoriteBtnClick: this.#handleFavoriteBtnClick
     });
@@ -40,6 +42,8 @@ export default class PointPresenter {
       point,
       destination,
       offers,
+      allDestinations,
+      allOffersByType,
       onFormSubmit: this.#handleFormSubmit,
       onRollUpBtnClick: this.#replaceFormToPointItem
     });
