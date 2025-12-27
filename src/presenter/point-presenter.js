@@ -77,9 +77,9 @@ export default class PointPresenter {
   }
 
   #handleFormSubmit = (updatedPoint) => {
-    this.#handleDataChange(updatedPoint);
-    // this.#mode = Mode.DEFAULT;
+    this.#mode = Mode.DEFAULT;
     this.#replaceFormToPointItem();
+    this.#handleDataChange(updatedPoint);
   };
 
   #replacePointItemToForm = () => {
@@ -103,8 +103,13 @@ export default class PointPresenter {
   };
 
   #handleFavoriteBtnClick = () => {
-    this.#handleDataChange({
-      ...this.#point, isFavorite: !this.#point.isFavorite
-    });
+    const updatedPoint = {
+      ...this.#point,
+      isFavorite: !this.#point.isFavorite
+    };
+
+    this.#point = updatedPoint;
+    this.#handleDataChange(updatedPoint);
   };
+
 }
