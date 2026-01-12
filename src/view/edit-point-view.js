@@ -86,7 +86,7 @@ function createEditPointTemplate(point, destination, offers, allDestinations) {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -177,7 +177,23 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.#setDatepicker();
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
   }
+
+  #priceInputHandler = (evt) => {
+    const value = evt.target.value;
+
+    if(value < 0) {
+      evt.target.value = 0;
+    }
+
+    this.updateElement({
+      point: {
+        ...this._state.point,
+        basePrice: Number(value)
+      }
+    });
+  };
 
   #getOffersByType(type) {
     const offerSet = this._state.allOffersByType.find(

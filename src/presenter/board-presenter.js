@@ -8,6 +8,8 @@ import { SortType, UpdateType, UserAction, filterTypes } from '../const.js';
 import { sortByDay, sortByPrice, sortByTime } from '../utils.js';
 import { remove } from '../framework/render.js';
 import { pointFilter } from '../utils.js';
+import NewPointPresenter from './new-point-presenter.js';
+import NewPointButtonView from '../view/new-point-button-view.js';
 
 
 const tripMainElement = document.querySelector('.trip-main');
@@ -23,6 +25,7 @@ export default class BoardPresenter {
   #filterModel = null;
   #noPointComponent = null;
   #filterType = filterTypes.EVERYTHING;
+  #newPointPresenter = null;
 
   constructor({boardContainer, pointsModel, filterModel}) {
     this.#boardContainer = boardContainer;
@@ -53,6 +56,17 @@ export default class BoardPresenter {
 
   init() {
 
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#tripEventListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#handleNewPointDestroy
+    });
+
+    const newPointButton = new NewPointButtonView({
+      onClick: this.#handleNewPointClick
+    });
+
+    render(newPointButton, tripMainElement);
     render(new TripInfoView(), tripMainElement, 'afterbegin');
 
     if (this.points.length === 0) {
@@ -64,6 +78,25 @@ export default class BoardPresenter {
     render(this.#tripEventListComponent, this.#boardContainer);
     this.#renderAllPoints();
   }
+
+  #handleNewPointClick = () => {
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterTypes.EVERYTHING);
+
+    this.#currentSort = SortType.DAY;
+
+    this.#handleModeChange();
+
+    this.#newPointPresenter.init({
+      destination: this.#pointsModel.getDestinations()[0],
+      offers: [],
+      allDestinations: this.#pointsModel.getDestinations(),
+      allOffersByType: this.#pointsModel.getAllOffers()
+    });
+  };
+
+  #handleNewPointDestroy = () => {
+
+  };
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
