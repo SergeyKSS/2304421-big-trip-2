@@ -1,6 +1,7 @@
 import PointItemView from '../view/point-item-view.js';
 import { render, replace, remove } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
+import { UserAction, UpdateType } from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -45,7 +46,8 @@ export default class PointPresenter {
       allDestinations,
       allOffersByType,
       onFormSubmit: this.#handleFormSubmit,
-      onRollUpBtnClick: this.#replaceFormToPointItem
+      onRollUpBtnClick: this.#replaceFormToPointItem,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
@@ -55,14 +57,14 @@ export default class PointPresenter {
 
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
+      remove(prevPointComponent);
     }
 
     if (this.#mode === Mode.EDITING) {
       replace(this.#editPointComponent, prevEditPointComponent);
+      remove(prevEditPointComponent);
     }
 
-    remove(prevPointComponent);
-    remove(prevEditPointComponent);
   }
 
   resetView() {
@@ -76,11 +78,21 @@ export default class PointPresenter {
     remove(this.#editPointComponent);
   }
 
-  #handleFormSubmit = (updatedPoint) => {
+
+  #handleFormSubmit = (point) => {
     this.#mode = Mode.DEFAULT;
     this.#replaceFormToPointItem();
-    this.#handleDataChange(updatedPoint);
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
   };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
+  };
+
 
   #replacePointItemToForm = () => {
     replace(this.#editPointComponent, this.#pointComponent);
@@ -103,12 +115,11 @@ export default class PointPresenter {
   };
 
   #handleFavoriteBtnClick = () => {
-    const updatedPoint = {
-      ...this.#point,
-      isFavorite: !this.#point.isFavorite
-    };
-
-    this.#handleDataChange(updatedPoint);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
 }

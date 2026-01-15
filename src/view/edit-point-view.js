@@ -6,6 +6,7 @@ import flatpickr from 'flatpickr';
 import { defaultDatepickerOptions } from '../const.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 function createEventTypesTemplate(types, currentType) {
   function getCheckedTypeAttribute(type) {
@@ -26,7 +27,7 @@ function createOffersTemplate(offers, point) {
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${getCheckedOfferAttribute(offer)}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
-        <span class="event__offer-title">${offer.title}</span>
+        <span class="event__offer-title">${he.encode(offer.title)}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
       </label>
@@ -34,11 +35,11 @@ function createOffersTemplate(offers, point) {
 }
 
 function createPhotosTemplate(pictures) {
-  return pictures.map((pic) => `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`).join('');
+  return pictures.map((pic) => `<img class="event__photo" src="${he.encode(pic.src)}" alt="${he.encode(pic.description)}">`).join('');
 }
 
 function createDestinationTemplate(destinations) {
-  return destinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
+  return destinations.map((destination) => `<option value="${he.encode(destination.name)}"></option>`).join('');
 }
 
 function createEditPointTemplate(point, destination, offers, allDestinations) {
@@ -67,7 +68,7 @@ function createEditPointTemplate(point, destination, offers, allDestinations) {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${createDestinationTemplate(allDestinations)}
                     </datalist>
@@ -86,11 +87,11 @@ function createEditPointTemplate(point, destination, offers, allDestinations) {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">Cancel</button>
+                  <button class="event__reset-btn" type="button">Delete</button>
                   <button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>
@@ -106,7 +107,7 @@ function createEditPointTemplate(point, destination, offers, allDestinations) {
 
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">${description}</p>
+                    <p class="event__destination-description">${he.encode(description)}</p>
 
                     <div class="event__photos-container">
                       <div class="event__photos-tape">
@@ -124,13 +125,16 @@ export default class EditPointView extends AbstractStatefulView {
   #handleRollUpBtnClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #handleDeleteClick = null;
 
-  constructor({ point, destination, offers, allDestinations, allOffersByType, onFormSubmit, onRollUpBtnClick }) {
+
+  constructor({ point, destination, offers, allDestinations, allOffersByType, onFormSubmit, onRollUpBtnClick, onDeleteClick }) {
     super();
     this._setState(EditPointView.parsePointToState(point, destination, offers, allDestinations, allOffersByType));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollUpBtnClick = onRollUpBtnClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -159,9 +163,25 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpBtnClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#rollUpBtnClickHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.#setDatepicker();
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
   }
+
+  #priceInputHandler = (evt) => {
+    const value = evt.target.value;
+
+    if(value < 0) {
+      evt.target.value = 0;
+    }
+
+    this.updateElement({
+      point: {
+        ...this._state.point,
+        basePrice: Number(value)
+      }
+    });
+  };
 
   #getOffersByType(type) {
     const offerSet = this._state.allOffersByType.find(
@@ -269,6 +289,12 @@ export default class EditPointView extends AbstractStatefulView {
     evt.preventDefault();
     this.#handleRollUpBtnClick();
   };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(this._state.point);
+  };
+
 
   static parsePointToState(point, destination, offers, allDestinations, allOffersByType) {
     return {
