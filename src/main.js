@@ -23,4 +23,5 @@ const filterPresenter = new FilterPresenter({filterContainer: filtersElement, fi
 
 filterPresenter.init();
 boardPresenter.init();
+pointsModel.init();
 

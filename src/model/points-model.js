@@ -1,26 +1,46 @@
-import { getRandomPoint } from '../mock/points.js';
-import { getDestinations } from '../mock/destinations.js';
-import { getOffers } from '../mock/offers.js';
-import { POINT_COUNT } from '../const.js';
+// import { getRandomPoint } from '../mock/points.js';
+// import { getDestinations } from '../mock/destinations.js';
+// import { getOffers } from '../mock/offers.js';
 import Observable from '../framework/observable.js';
+import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
-  #points = Array.from({length: POINT_COUNT}, getRandomPoint);
-  #destinations = getDestinations();
-  #offers = getOffers();
+  // #destinations = getDestinations();
+  // #offers = getOffers();
+  #points = [];
+  #destinations = [];
+  #offers = [];
   #pointsApiService = null;
 
   constructor({pointsApiService}) {
     super();
     this.#pointsApiService = pointsApiService;
 
-    this.#pointsApiService.points.then((points) => {
-      console.log(points);
-    });
+
   }
 
   getPoints() {
     return this.#points;
+  }
+
+  async init() {
+    try {
+      const [points, destinations, offers] = await Promise.all([
+        this.#pointsApiService.points,
+        this.#pointsApiService.destinations,
+        this.#pointsApiService.offers,
+      ]);
+
+      this.#points = points.map((point) => this.#adaptToClient(point));
+      this.#destinations = destinations;
+      this.#offers = offers;
+    } catch {
+      this.#points = [];
+      this.#destinations = [];
+      this.#offers = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updatePoint(updateType, update) {
@@ -78,5 +98,22 @@ export default class PointsModel extends Observable {
 
   getAllOffers() {
     return this.#offers;
+  }
+
+  #adaptToClient(point) {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
   }
 }
