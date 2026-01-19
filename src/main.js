@@ -21,7 +21,7 @@ const filterModel = new FilterModel();
 const boardPresenter = new BoardPresenter({boardContainer: tripEventsElement, pointsModel, filterModel});
 const filterPresenter = new FilterPresenter({filterContainer: filtersElement, filterModel, pointsModel});
 
+pointsModel.init();
 filterPresenter.init();
 boardPresenter.init();
-pointsModel.init();
 

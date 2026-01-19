@@ -72,13 +72,13 @@ export default class BoardPresenter {
 
     render(this.#newPointButton, tripMainElement);
     render(new TripInfoView(), tripMainElement, 'afterbegin');
-    this.#renderSort();
+    // this.#renderSort();
     render(this.#tripEventListComponent, this.#boardContainer);
 
-    if (this.points.length === 0) {
-      this.#renderNoPoints();
-      return;
-    }
+    // if (this.points.length === 0) {
+    //   this.#renderNoPoints();
+    //   return;
+    // }
 
     this.#renderAllPoints();
   }
@@ -146,7 +146,13 @@ export default class BoardPresenter {
 
       case UpdateType.INIT:
         this.#isLoading = false;
-        remove(this.#loadingComponent);
+        this.#clearBoard();
+        render(this.#tripEventListComponent, this.#boardContainer);
+
+        if (this.points.length > 0) {
+          this.#renderSort();
+        }
+
         this.#renderAllPoints();
         break;
     }
@@ -182,18 +188,18 @@ export default class BoardPresenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#boardContainer.element, 'afterbegin');
+    render(this.#loadingComponent, this.#boardContainer, 'afterbegin');
   }
 
   #clearBoard({ resetSortType = false } = {}) {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
-    // this.#tripEventListComponent.element.innerHTML = '';
-    remove(this.#tripEventListComponent);
+    this.#tripEventListComponent.element.innerHTML = '';
     remove(this.#loadingComponent);
+    remove(this.#sortComponent);
+    // remove(this.#tripEventListComponent);
 
-    // remove(this.#sortComponent);
     // remove(this.#tripEventListComponent);
 
     // this.#tripEventListComponent = new TripEventsListView();
@@ -210,13 +216,15 @@ export default class BoardPresenter {
 
 
   #renderAllPoints() {
-    if(this.points.length === 0) {
-      this.#renderNoPoints();
-      return;
-    }
+    render(this.#tripEventListComponent, this.#boardContainer);
 
     if (this.#isLoading) {
       this.#renderLoading();
+      return;
+    }
+
+    if(this.points.length === 0) {
+      this.#renderNoPoints();
       return;
     }
 
