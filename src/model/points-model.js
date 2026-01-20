@@ -1,12 +1,7 @@
-// import { getRandomPoint } from '../mock/points.js';
-// import { getDestinations } from '../mock/destinations.js';
-// import { getOffers } from '../mock/offers.js';
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
-  // #destinations = getDestinations();
-  // #offers = getOffers();
   #points = [];
   #destinations = [];
   #offers = [];
@@ -66,28 +61,35 @@ export default class PointsModel extends Observable {
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch {
+      throw new Error('Can\'t add a point');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
 
-    this.#points = [
-      ...this.#points.slice(0, index),
-      ...this.#points.slice(index + 1),
-    ];
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
 
-    this._notify(updateType);
+      this._notify(updateType);
+    } catch {
+      throw new Error('Can\'t delete a point');
+    }
   }
 
   getDestinationById(id) {

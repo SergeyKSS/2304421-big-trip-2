@@ -19,13 +19,13 @@ function createEventTypesTemplate(types, currentType) {
     </div>`).join('');
 }
 
-function createOffersTemplate(offers, point) {
+function createOffersTemplate(offers, point, isDisabled) {
   function getCheckedOfferAttribute(offer) {
     return point.offers.includes(offer.id) ? 'checked' : '';
   }
   return offers.map((offer) =>`
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${getCheckedOfferAttribute(offer)}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${getCheckedOfferAttribute(offer)} ${isDisabled ? 'disabled' : ''}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${he.encode(offer.title)}</span>
         &plus;&euro;&nbsp;
@@ -42,7 +42,7 @@ function createDestinationTemplate(destinations) {
   return destinations.map((destination) => `<option value="${he.encode(destination.name)}"></option>`).join('');
 }
 
-function createEditPointTemplate(point, destination, offers, allDestinations) {
+function createEditPointTemplate(point, destination, offers, allDestinations, isDisabled, isDeleting, isSaving) {
   const { basePrice, dateFrom, dateTo, type } = point;
   const { name, description, pictures } = destination;
 
@@ -90,8 +90,8 @@ function createEditPointTemplate(point, destination, offers, allDestinations) {
                     <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
                   </div>
 
-                  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="button">Delete</button>
+                  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+                  <button class="event__reset-btn" type="button" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
                   <button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>
@@ -140,8 +140,8 @@ export default class EditPointView extends AbstractStatefulView {
   }
 
   get template() {
-    const { point, destination, offers, allDestinations } = this._state;
-    return createEditPointTemplate(point, destination, offers, allDestinations);
+    const { point, destination, offers, allDestinations, isDisabled, isDeleting, isSaving } = this._state;
+    return createEditPointTemplate(point, destination, offers, allDestinations, isDisabled, isDeleting, isSaving);
   }
 
   removeElement() {
@@ -230,6 +230,8 @@ export default class EditPointView extends AbstractStatefulView {
       },
     );
 
+    this.#datepickerFrom.set('clickOpens', !this._state.isDisabled);
+
     this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
@@ -239,6 +241,8 @@ export default class EditPointView extends AbstractStatefulView {
         minDate: this._state.point.dateFrom
       },
     );
+
+    this.#datepickerTo.set('clickOpens', !this._state.isDisabled);
   }
 
 
@@ -302,7 +306,10 @@ export default class EditPointView extends AbstractStatefulView {
       destination,
       offers,
       allDestinations,
-      allOffersByType
+      allOffersByType,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 
