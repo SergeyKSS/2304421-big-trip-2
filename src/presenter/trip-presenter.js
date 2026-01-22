@@ -1,7 +1,6 @@
 import TripInfoView from '../view/trip-info-view.js';
 import { render, remove } from '../framework/render.js';
 import { getTripRoute, getTripDates, getTripPrice } from '../utils-trip-info.js';
-import { UpdateType } from '../const.js';
 
 export default class TripInfoPresenter {
   #container = null;
@@ -19,14 +18,8 @@ export default class TripInfoPresenter {
     this.#renderTripInfo();
   }
 
-  #handleModelEvent = (updateType) => {
-    switch (updateType) {
-      case UpdateType.INIT:
-      case UpdateType.MINOR:
-      case UpdateType.MAJOR:
-        this.#renderTripInfo();
-        break;
-    }
+  #handleModelEvent = () => {
+    this.#renderTripInfo();
   };
 
   #renderTripInfo() {
