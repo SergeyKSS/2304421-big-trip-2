@@ -1,6 +1,6 @@
 import TripInfoView from '../view/trip-info-view.js';
 import { render, remove } from '../framework/render.js';
-import { getTripRoute, getTripDates, getTripPrice } from '../utils-trip-info.js';
+import { getTripRoute, getTripDates, getTripPrice } from '../utils/utils-trip-info.js';
 
 export default class TripPresenter {
   #container = null;
