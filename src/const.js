@@ -39,7 +39,7 @@ export const DATE_FORMAT = {
 
 export const defaultDatepickerOptions = {
   enableTime: true,
-  dateFormat: 'd.m.Y H:i',
+  dateFormat: 'd/m/y H:i',
   locale: {firstDayOfWeek: 1},
   'time_24hr': true
 };
