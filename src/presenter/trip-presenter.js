@@ -2,7 +2,7 @@ import TripInfoView from '../view/trip-info-view.js';
 import { render, remove } from '../framework/render.js';
 import { getTripRoute, getTripDates, getTripPrice } from '../utils-trip-info.js';
 
-export default class TripInfoPresenter {
+export default class TripPresenter {
   #container = null;
   #pointsModel = null;
   #tripInfoComponent = null;
