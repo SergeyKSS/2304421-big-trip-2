@@ -12,9 +12,9 @@ export const filterTypes = {
 
 export const NoPointsTextType = {
   everything: 'Click New Event to create your first point',
-  future: 'There are no points about the future',
-  present: 'There are no points about the present',
-  past: 'There are no points about the past'
+  future: 'There are no future events now',
+  present: 'There are no present events now',
+  past: 'There are no past events now'
 };
 
 export const sortTypes = [

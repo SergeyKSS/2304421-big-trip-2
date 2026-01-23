@@ -84,11 +84,22 @@ export default class BoardPresenter {
 
   #handleNewPointClick = () => {
     this.#handleModeChange();
+
+    this.#filterModel.setFilter(UpdateType.MINOR, filterTypes.EVERYTHING);
+
+    this.#currentSort = SortType.DAY;
+
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+      this.#renderSort();
+    }
+
     this.#filterModel.setFilter(UpdateType.MINOR, filterTypes.EVERYTHING);
     this.#currentSort = SortType.DAY;
     this.#newPointButton.setDisabled();
+    this.#handleModeChange();
     this.#newPointPresenter.init({
-      destination: this.#pointsModel.getDestinations()[0],
+      destination: null,
       offers: [],
       allDestinations: this.#pointsModel.getDestinations(),
       allOffersByType: this.#pointsModel.getAllOffers()
@@ -101,6 +112,7 @@ export default class BoardPresenter {
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
+    this.#newPointPresenter.destroy();
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
