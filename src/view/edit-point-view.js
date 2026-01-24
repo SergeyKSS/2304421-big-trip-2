@@ -254,7 +254,7 @@ export default class EditPointView extends AbstractStatefulView {
   }
 
   #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       point: {
         ...this._state.point,
         dateFrom: userDate
@@ -263,7 +263,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       point: {
         ...this._state.point,
         dateTo: userDate,
@@ -290,6 +290,9 @@ export default class EditPointView extends AbstractStatefulView {
         onChange: this.#dateFromChangeHandler,
         maxDate: this._state.point.dateTo,
         closeOnSelect: false,
+        enableTime: true,
+        'time_24hr': true,
+        allowInput: true
       },
     );
 
@@ -303,6 +306,9 @@ export default class EditPointView extends AbstractStatefulView {
         onChange: this.#dateToChangeHandler,
         minDate: this._state.point.dateFrom,
         closeOnSelect: false,
+        enableTime: true,
+        'time_24hr': true,
+        allowInput: true
       },
     );
 
