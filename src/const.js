@@ -14,7 +14,8 @@ export const NoPointsTextType = {
   everything: 'Click New Event to create your first point',
   future: 'There are no future events now',
   present: 'There are no present events now',
-  past: 'There are no past events now'
+  past: 'There are no past events now',
+  error: 'Failed to load latest route information'
 };
 
 export const sortTypes = [

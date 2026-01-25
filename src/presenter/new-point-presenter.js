@@ -49,13 +49,6 @@ export default class NewPointPresenter {
       return;
     }
 
-    // if (this.#editPointComponent) {
-    //   remove(this.#editPointComponent);
-    //   this.#editPointComponent = null;
-    // }
-
-    // remove(this.#editPointComponent);
-
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     remove(this.#editPointComponent);
     this.#editPointComponent = null;
@@ -87,8 +80,6 @@ export default class NewPointPresenter {
       UpdateType.MAJOR,
       point
     );
-
-    // this.destroy();
   };
 
   #escKeyDownHandler = (evt) => {
